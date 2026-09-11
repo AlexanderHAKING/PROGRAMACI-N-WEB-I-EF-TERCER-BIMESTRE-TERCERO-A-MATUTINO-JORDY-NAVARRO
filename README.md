@@ -1,134 +1,125 @@
-# Programación Web I - EF Tercer Bimestre
+# EXAMEN FINAL
 
-Proyecto de examen práctico para **Tercero A Matutino**.
+**JORDY ALEXANDER NAVARRO TELLO**  
+**TERCERO A MATUTINA**  
+**Programación Web I - Tercer Bimestre**
 
-## Orden de ejecución
+## Guía paso a paso
 
-### Opción rápida
+### Paso 1. Abrir la carpeta del proyecto
 
-Desde la carpeta principal, ejecutar con doble clic:
+Abrir la carpeta `Practico_EF3_3A_Matutino_Productos`.
 
-`abrir-productos-angular.bat`
-
-Este archivo inicia los tres servicios y abre Angular:
-
-- ProductosSOAP en `http://localhost:5163`
-- MovimientosREST en `http://localhost:5265`
-- Productos Angular en `http://localhost:4200`
-
-Si los servicios ya están abiertos, no se debe ejecutar nuevamente el lanzador para evitar conflictos de puertos.
-
-## 1. SQL Server
+### Paso 2. Preparar SQL Server
 
 1. Abrir SQL Server Management Studio.
-2. Ejecutar `SQL/EF3_Productos_Movimientos.sql`.
-3. La conexión configurada por defecto es:
+2. Conectarse a `localhost\SQLEXPRESS`.
+3. Ejecutar `SQL/EF3_Productos_Movimientos.sql`.
+4. Confirmar que existe la base `EF3ProductosDB` con productos.
+
+La conexión configurada por defecto es:
 
 `Server=localhost\SQLEXPRESS;Database=EF3ProductosDB;Trusted_Connection=True;TrustServerCertificate=True;`
 
-Si la instancia de SQL Server es diferente, modificar `DefaultConnection` en:
+Si la instancia es diferente, cambiar `DefaultConnection` en `ProductosSOAP/appsettings.json` y `MovimientosREST/appsettings.json`.
 
-- `ProductosSOAP/appsettings.json`
-- `MovimientosREST/appsettings.json`
+### Paso 3. Ejecutar ProductosSOAP
 
-## 2. ProductosSOAP
+1. Abrir `ProductosSOAP/ProductosSOAP.csproj` en Visual Studio.
+2. Seleccionar el perfil **HTTP**.
+3. Presionar **Iniciar**.
+4. Comprobar el servicio en `http://localhost:5163/ProductoService.svc`.
 
-Abrir `ProductosSOAP/ProductosSOAP.csproj` en Visual Studio y ejecutar el perfil **HTTP**.
+El WSDL está en `http://localhost:5163/ProductoService.svc?wsdl`. Que se muestre como XML es normal.
 
-- Servicio: `http://localhost:5163/ProductoService.svc`
-- WSDL: `http://localhost:5163/ProductoService.svc?wsdl`
+### Paso 4. Ejecutar MovimientosREST
 
-El WSDL se muestra como XML en el navegador; eso es normal y confirma que el servicio está publicado.
+1. Abrir `MovimientosREST/MovimientosREST.csproj` en Visual Studio.
+2. Seleccionar el perfil **HTTP**.
+3. Presionar **Iniciar**.
+4. Usar como URL base `http://localhost:5265`.
 
-## 3. MovimientosREST
+Endpoints disponibles:
 
-Abrir `MovimientosREST/MovimientosREST.csproj` en Visual Studio y ejecutar el perfil **HTTP**.
+- `GET http://localhost:5265/api/MovimientoInventario`
+- `GET http://localhost:5265/api/MovimientoInventario/1`
+- `GET http://localhost:5265/api/MovimientoInventario/producto/1`
+- `POST http://localhost:5265/api/MovimientoInventario`
 
-URL base:
+El POST consulta el producto mediante SOAP, valida el movimiento, actualiza el stock y guarda el registro.
 
-`http://localhost:5265`
+### Paso 5. Ejecutar Angular
 
-Endpoints existentes:
+Para iniciar solo Angular:
 
-- `GET /api/MovimientoInventario`
-- `GET /api/MovimientoInventario/{id}`
-- `GET /api/MovimientoInventario/producto/{idProducto}`
-- `POST /api/MovimientoInventario`
+1. Abrir la carpeta `productos-angular`.
+2. Ejecutar `abrir-angular.bat` con doble clic.
+3. Esperar el mensaje `http://localhost:4200/`.
+4. Abrir `http://localhost:4200`.
 
-El endpoint por producto devuelve únicamente los movimientos de ese producto y responde `404` si no existen movimientos.
-
-El registro de movimientos:
-
-- Acepta solamente `ENTRADA` y `SALIDA`.
-- Rechaza cantidades menores o iguales a cero.
-- Rechaza productos inexistentes o inactivos.
-- Consulta el producto mediante ProductosSOAP.
-- Usa el stock SOAP como `StockAnterior`.
-- Calcula `StockResultante`.
-- Rechaza una salida mayor al stock disponible.
-- Actualiza el stock mediante ProductosSOAP antes de guardar el movimiento.
-
-## 4. Productos Angular
-
-Para iniciar únicamente Angular, ejecutar:
-
-`productos-angular/abrir-angular.bat`
-
-También se puede abrir una terminal en `productos-angular` y ejecutar:
+También se puede usar una terminal dentro de `productos-angular`:
 
 ```text
 npm install
 npm start
 ```
 
-La aplicación estará disponible en `http://localhost:4200`.
+`node_modules` permanece en el ordenador para ejecutar Angular, pero está excluido de GitHub.
 
-Angular consume los servicios existentes:
+Para iniciar SOAP, REST y Angular juntos, ejecutar desde la carpeta principal `abrir-productos-angular.bat`. No ejecutarlo si los servicios ya están abiertos.
 
-- `ProductoSoapService` consulta ProductosSOAP, envía `SOAPAction` y procesa la respuesta XML.
-- `MovimientoService` consume el endpoint REST existente para listar y registrar movimientos.
+### Paso 6. Verificar Angular
 
-No se creó un segundo servicio REST para reemplazar el servicio solicitado. `ProductoSoapClient` es únicamente el cliente interno que permite a MovimientosREST consultar SOAP y actualizar el stock.
+La pantalla debe mostrar los productos recibidos desde SOAP con ID, nombre, precio, stock y estado. También debe mostrar el formulario de movimientos y la tabla de movimientos recibidos desde REST.
 
-Para que aparezcan los productos, SQL Server, ProductosSOAP y MovimientosREST deben estar funcionando.
+### Paso 7. Probar con Postman
 
-## 5. Pruebas con Postman
+1. Abrir Postman.
+2. Importar `Postman/POSTMAN_MovimientosREST.postman_collection.json`.
+3. Confirmar que MovimientosREST esté ejecutándose en el puerto `5265`.
+4. Ejecutar las solicitudes de la colección.
 
-La colección está en:
+También se puede abrir con `Postman/abrir-productos-postman.bat`.
 
-`Postman/POSTMAN_MovimientosREST.postman_collection.json`
-
-Se puede importar manualmente en Postman o ejecutar:
-
-`Postman/abrir-productos-postman.bat`
-
-La colección incluye pruebas para:
-
-- Listar movimientos.
-- Consultar un movimiento por ID.
-- Consultar movimientos por producto.
-- Registrar una entrada válida.
-- Registrar una salida válida.
-- Cantidad igual a cero.
-- Tipo diferente de `ENTRADA` o `SALIDA`.
-- Producto inexistente.
-- Producto inactivo.
-- Salida superior al stock disponible.
+La colección prueba listar, consultar por ID, consultar por producto, registrar entradas y salidas, y validar cantidad cero, tipo incorrecto, producto inexistente, producto inactivo y stock insuficiente.
 
 Los POST válidos modifican el stock y agregan un movimiento en la base de datos.
 
-## Estado verificado
+## Reglas cumplidas del examen
 
-- ProductosSOAP funcional y conectado a SQL Server.
-- MovimientosREST funcional, con validaciones e integración SOAP.
-- Angular funcional, mostrando productos SOAP y movimientos REST.
-- Pruebas REST preparadas para Postman.
-- Compilación .NET correcta, sin errores ni advertencias.
-- Compilación Angular correcta.
+- El GET por producto devuelve únicamente sus movimientos.
+- Si no existen movimientos, responde con un código HTTP apropiado.
+- El POST usa el producto administrado por ProductosSOAP.
+- Se usa el stock SOAP como `StockAnterior` y se calcula `StockResultante`.
+- Solo se aceptan `ENTRADA` y `SALIDA`.
+- No se permite stock negativo ni salidas superiores al stock disponible.
+- Angular usa el servicio REST existente para registrar movimientos.
+- Angular procesa la respuesta XML de SOAP y obtiene `IdProducto` y `Nombre`.
+- No se creó un segundo servicio REST.
 
-## Archivos de inicio
+## Archivos importantes
 
+- `README.md`: guía completa paso a paso.
+- `LEEME_EJECUCION.txt`: instrucciones resumidas.
 - `abrir-productos-angular.bat`: inicia todo el proyecto.
-- `productos-angular/abrir-angular.bat`: inicia solamente Angular.
-- `productos-angular/INICIAR_ANGULAR.bat`: alternativa para iniciar Angular.
-- `Postman/abrir-productos-postman.bat`: abre la colección de Postman.
+- `productos-angular/abrir-angular.bat`: inicia solo Angular.
+- `Postman/POSTMAN_MovimientosREST.postman_collection.json`: pruebas REST.
+- `SQL/EF3_Productos_Movimientos.sql`: base de datos y datos iniciales.
+
+## Solución de problemas
+
+### Angular muestra `ERR_CONNECTION_REFUSED`
+
+Angular no está ejecutándose. Iniciar `productos-angular/abrir-angular.bat` y abrir nuevamente `http://localhost:4200`.
+
+### Aparece `C:\Program` no se reconoce
+
+Usar los archivos `.bat` actualizados del proyecto, que manejan correctamente las rutas con espacios de `Program Files`.
+
+### No aparecen productos
+
+Comprobar que SQL Server, ProductosSOAP, MovimientosREST y Angular estén ejecutándose en los puertos `5163`, `5265` y `4200`.
+
+### El puerto está ocupado
+
+Cerrar la ventana del servicio que ya está ejecutándose o reiniciar Visual Studio antes de iniciar nuevamente.
