@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+productos-angular/node_modules/
+productos-angular/dist/
+productos-angular/.angular/
+.vs/
+*.user
+*.suo

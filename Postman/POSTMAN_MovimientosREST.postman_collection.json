@@ -1,0 +1,154 @@
+{
+  "info": {
+    "name": "EF3 MovimientosREST",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5265"
+    }
+  ],
+  "item": [
+    {
+      "name": "Listar movimientos",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Obtener movimiento por ID",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/MovimientoInventario/1"
+      }
+    },
+    {
+      "name": "Listar movimientos por producto",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/MovimientoInventario/producto/1"
+      }
+    },
+    {
+      "name": "Registrar ENTRADA valida",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 1,\n  \"tipo\": \"ENTRADA\",\n  \"cantidad\": 5,\n  \"observacion\": \"Prueba Postman entrada\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Registrar SALIDA valida",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 1,\n  \"tipo\": \"SALIDA\",\n  \"cantidad\": 4,\n  \"observacion\": \"Prueba Postman salida\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Rechazar cantidad cero",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 1,\n  \"tipo\": \"ENTRADA\",\n  \"cantidad\": 0,\n  \"observacion\": \"Cantidad invalida\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Rechazar tipo invalido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 1,\n  \"tipo\": \"AJUSTE\",\n  \"cantidad\": 2,\n  \"observacion\": \"Tipo invalido\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Rechazar producto inexistente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 999,\n  \"tipo\": \"ENTRADA\",\n  \"cantidad\": 1,\n  \"observacion\": \"Producto inexistente\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Rechazar producto inactivo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 5,\n  \"tipo\": \"ENTRADA\",\n  \"cantidad\": 1,\n  \"observacion\": \"Producto inactivo\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    },
+    {
+      "name": "Rechazar salida sin stock suficiente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idProducto\": 4,\n  \"tipo\": \"SALIDA\",\n  \"cantidad\": 999,\n  \"observacion\": \"Stock insuficiente\"\n}"
+        },
+        "url": "{{baseUrl}}/api/MovimientoInventario"
+      }
+    }
+  ]
+}
