@@ -85,6 +85,12 @@ La colección prueba listar, consultar por ID, consultar por producto, registrar
 
 Los POST válidos modifican el stock y agregan un movimiento en la base de datos.
 
+## Resultado visual de Angular
+
+La aplicación funcionando se visualiza así:
+
+![Pantalla de productos y movimientos](docs/captura-angular.png)
+
 ## Reglas cumplidas del examen
 
 - El GET por producto devuelve únicamente sus movimientos.
@@ -100,6 +106,7 @@ Los POST válidos modifican el stock y agregan un movimiento en la base de datos
 ## Archivos importantes
 
 - `README.md`: guía completa paso a paso.
+- `docs/captura-angular.png`: captura de la aplicación Angular funcionando.
 - `LEEME_EJECUCION.txt`: instrucciones resumidas.
 - `abrir-productos-angular.bat`: inicia todo el proyecto.
 - `productos-angular/abrir-angular.bat`: inicia solo Angular.
